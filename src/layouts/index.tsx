@@ -39,7 +39,7 @@ const BasicLayout: FC<any> = ({ children }) => {
       headerRender={() => <Header />}
       headerContentRender={() => <ProBreadcrumb />}
       fixedHeader={true}
-      route={routes[1]}
+      // route={routes[1]}
       menuDataRender={(menuData: MenuDataItem[]) => {
         return (initialState as TAppInitial).menus;
       }}
