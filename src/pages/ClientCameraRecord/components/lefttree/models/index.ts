@@ -1,4 +1,5 @@
 import { TTree } from '@/models';
+import { TClientInfo } from '@/pages/ClientInfo/models';
 import { Key } from 'react';
 
 export type TLeftTreeStore = {
@@ -19,4 +20,5 @@ export type TLeftTreeStore = {
   expandedKeys: Key[];
   foundKeys: Key[];
   idClientInfo?: string;
+  clientInfoList: TClientInfo[];
 };

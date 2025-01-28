@@ -1,27 +1,35 @@
 import BaseAPI from '@/api';
 import { TClientInfo } from '@/pages/ClientInfo/models';
-import { message, Select } from 'antd';
+import { Button, message, Select } from 'antd';
 import { FC, useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useClientInfoList, useIdClientInfo } from '../hooks';
+import { actions, fetchTree } from '../store';
+import { SearchOutlined } from '@ant-design/icons';
 
-const ClientInfoSelect: FC<{
-  handleClientInfoSelect: (value: string) => void;
-}> = ({ handleClientInfoSelect }) => {
-  const [value, setValue] = useState<string>();
-  const [clientInfoList, setClientInfoList] = useState<TClientInfo[]>([]);
+const ClientInfoSelect: FC<{}> = ({}) => {
+  const dispatch = useDispatch();
+  const idClientInfo = useIdClientInfo();
+  const clientInfoList = useClientInfoList();
   useEffect(() => {
-    const uri = `/clientInfo/aq`;
-    BaseAPI.POST(uri, {})
-      .then((clientInfoList: TClientInfo[]) => {
-        setClientInfoList(clientInfoList);
-      })
-      .catch((e) => {
-        message.error('query clientInfo error');
-      });
+    if (!idClientInfo) {
+      const uri = `/clientInfo/aq`;
+      BaseAPI.POST(uri, {})
+        .then((clientInfoList: TClientInfo[]) => {
+          dispatch(actions.setClientInfoList(clientInfoList));
+        })
+        .catch((e) => {
+          message.error('query clientInfo error');
+        });
+    }
   }, []);
 
   const handleChange = (value: string) => {
-    setValue(value);
-    handleClientInfoSelect(value);
+    dispatch(actions.setIdClientInfo(value));
+  };
+
+  const handleSearch = () => {
+    dispatch(fetchTree());
   };
 
   return (
@@ -31,7 +39,7 @@ const ClientInfoSelect: FC<{
         <Select
           style={{ minWidth: '150px' }}
           size={'small'}
-          value={value}
+          value={idClientInfo}
           placeholder={'请选择'}
           defaultActiveFirstOption={false}
           showArrow={false}
@@ -43,6 +51,14 @@ const ClientInfoSelect: FC<{
             label: clientInfo.clientCode,
           }))}
         />
+        <Button
+          size={'small'}
+          onClick={handleSearch}
+          type={'primary'}
+          disabled={!idClientInfo}
+        >
+          <SearchOutlined />
+        </Button>
       </div>
     </>
   );

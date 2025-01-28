@@ -6,5 +6,6 @@ export const initialState: TLeftTreeStore = {
   expandedKeys: [],
   foundKeys: [],
   fgDisabled: false,
-  fgInnerDisabled: false
+  fgInnerDisabled: false,
+  clientInfoList: [],
 };

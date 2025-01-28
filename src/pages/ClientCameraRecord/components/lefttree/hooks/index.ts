@@ -29,9 +29,21 @@ export const useIdUiConf = () => {
   return useSelector(selectIdUiConf);
 }
 
+export const useIdClientInfo = () => {
+  return useSelector((state: { [x: string]: TLeftTreeStore }) => {
+    return state[componentName].idClientInfo;
+  });
+}
+
+export const useClientInfoList = () => {
+  return useSelector((state: { [x: string]: TLeftTreeStore }) => {
+    return state[componentName].clientInfoList;
+  });
+}
+
 export const useFgDisabled = () => {
   return useSelector((state: { [x: string]: TLeftTreeStore }) => {
-    return state[componentName].fgDisabled;
+    return state[componentName].fgDisabled || !state[componentName].idClientInfo;
   });
 }
 

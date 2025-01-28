@@ -11,6 +11,7 @@ const TableToolBar: FC<{
   /**组件是否是禁用状态 */
   fgDisabled: boolean;
 }> = ({ idLayout, fgDisabled }) => {
+  const [idClientInfo, setIdClientInfo] = useState<string>();
   const [componentFgDiabled, setComponentFgDiabled] =
     useState<boolean>(fgDisabled);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -26,6 +27,20 @@ const TableToolBar: FC<{
   }, [fgDisabled]);
 
   useEffect(() => {
+    const idClientInfoSelectedObserver: Observer = {
+      topic: 'idClientInfoSelected',
+      consumerId: idLayout,
+      update: function (message: TMessage): void {
+        (async () => {
+          if (!message || message.consumerIds.includes(idLayout)) {
+            return;
+          }
+          setIdClientInfo(message.data);
+        })();
+      },
+    };
+    subject.subscribe(idClientInfoSelectedObserver);
+
     const treeNodeObserver: Observer = {
       topic: 'treeNodeSelected',
       consumerId: idLayout,
@@ -80,6 +95,7 @@ const TableToolBar: FC<{
 
     //销毁观察者
     return () => {
+      subject.unsubsribe(idClientInfoSelectedObserver);
       subject.unsubsribe(treeNodeObserver);
       subject.unsubsribe(treeNodeCancelObserver);
       subject.unsubsribe(selectRowsObserver);
@@ -179,7 +195,7 @@ const TableToolBar: FC<{
           flexWrap: 'wrap',
         }}
       >
-        <Button
+        {/* <Button
           key={'k2iRCg3iOfisxH1RSaVgL'}
           size={'middle'}
           type={'primary'}
@@ -222,8 +238,9 @@ const TableToolBar: FC<{
           onClick={handleRowSelectType}
         >
           {'多选'}
-        </Button>
+        </Button> */}
         <Button
+          disabled={!idClientInfo}
           key={'AQtjiv8ScrTb5lPd3M0Ga'}
           size={'middle'}
           type={'primary'}
@@ -232,8 +249,8 @@ const TableToolBar: FC<{
           {'刷新'}
         </Button>
         <ClientCameraRecordVod
-          disabled={selectRows?.length !== 1}
-          idClientInfo={"3B195JvbGJLXEfGiA6vB8"}
+          disabled={selectRows?.length !== 1 || !idClientInfo}
+          idClientInfo={idClientInfo!}
           idCameraRecord={getId()!}
         />
       </div>

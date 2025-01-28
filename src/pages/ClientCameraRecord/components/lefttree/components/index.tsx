@@ -79,7 +79,7 @@ const LeftTreeLayout: FC<TOprationLayout> = () => {
     subject.subscribe(saveObserver);
 
     //获取树信息
-    dispatch(fetchTree());
+    // dispatch(fetchTree());
 
     //销毁观察者
     return () => {
@@ -175,10 +175,6 @@ const LeftTreeLayout: FC<TOprationLayout> = () => {
     },
   };
 
-  const handleClientInfoSelect = (value: string) => {
-    dispatch(actions.setIdClientInfo(value));
-  };
-
   return (
     <>
       <div
@@ -197,8 +193,8 @@ const LeftTreeLayout: FC<TOprationLayout> = () => {
             gap: '10px',
           }}
         >
-          <ClientInfoSelect handleClientInfoSelect={handleClientInfoSelect} />
-          <Space size={'small'}>
+          <ClientInfoSelect />
+          {/* <Space size={'small'}>
             <Input
               ref={searchRef}
               value={searchValue}
@@ -228,7 +224,7 @@ const LeftTreeLayout: FC<TOprationLayout> = () => {
             <Button onClick={onReflesh} type={'primary'} disabled={fgDisabled}>
               <ReloadOutlined />
             </Button>
-          </Space>
+          </Space> */}
           <div style={{ display: 'flex', justifyContent: 'end', gap: '10px' }}>
             {'禁用状态:'}
             <Checkbox

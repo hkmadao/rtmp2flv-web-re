@@ -4,6 +4,7 @@ import { TTree } from "@/models";
 import { Key } from "react";
 import { subject, treeConf } from "../../../conf";
 import { deepCopy, getMatchKeys, getTreeByKeys, getTreeKeys, } from "@/util";
+import { TClientInfo } from "@/pages/ClientInfo/models";
 
 export const setComponentInfo: CaseReducer<
   TLeftTreeStore,
@@ -94,4 +95,12 @@ export const setIdClientInfo: CaseReducer<
     producerId: state.idUiConf!,
     data: idClientInfo,
   });
+};
+
+export const setClientInfoList: CaseReducer<
+  TLeftTreeStore,
+  PayloadAction<TClientInfo[]>
+> = (state, action) => {
+  const clientInfoList = action.payload
+  state.clientInfoList = clientInfoList;
 };
