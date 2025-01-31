@@ -6,7 +6,7 @@ import {
   nanoid,
 } from '@reduxjs/toolkit';
 import { arrToTree, } from '@/util';
-import { treeConf, } from '../../../conf';
+import { subject, treeConf, } from '../../../conf';
 import { fetchTree, remove, } from './async-thunk';
 import { componentName } from '../conf';
 import { initialState } from './initial-state';
@@ -23,9 +23,29 @@ export const leftTreeSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchTree.pending, (state, action) => { })
-      .addCase(fetchTree.rejected, (state, action) => { })
+      .addCase(fetchTree.rejected, (state, action) => {
+        state.idClientInfo = undefined;
+        state.sourchTreeData = [];
+        state.treeData = [];
+        state.foundKeys = [];
+        state.expandedKeys = [];
+        state.selectedKeys = [];
+        state.selectedNode = undefined;
+        subject.publish({
+            topic: 'idClientInfoCancelSelected',
+            producerId: state.idUiConf!,
+            data: undefined,
+          });
+       })
       .addCase(fetchTree.fulfilled, (state, action) => {
-        const treeData = arrToTree(treeConf?.firstTreeRef?.parentIdAttr ?? 'idParent', treeConf?.firstTreeRef?.keyAttr!, treeConf?.firstTreeRef?.labelAttr!, action.payload, true, null);
+        const { idClientInfo, tree } = action.payload;
+        state.idClientInfo = idClientInfo;
+        subject.publish({
+          topic: 'idClientInfoSelected',
+          producerId: state.idUiConf!,
+          data: idClientInfo,
+        });
+        const treeData = arrToTree(treeConf?.firstTreeRef?.parentIdAttr ?? 'idParent', treeConf?.firstTreeRef?.keyAttr!, treeConf?.firstTreeRef?.labelAttr!, tree, true, null);
         state.sourchTreeData = treeData;
         state.treeData = treeData;
         state.foundKeys = [];

@@ -12,20 +12,20 @@ const ClientInfoSelect: FC<{}> = ({}) => {
   const idClientInfo = useIdClientInfo();
   const clientInfoList = useClientInfoList();
   useEffect(() => {
-    if (!idClientInfo) {
-      const uri = `/clientInfo/aq`;
-      BaseAPI.POST(uri, {})
-        .then((clientInfoList: TClientInfo[]) => {
-          dispatch(actions.setClientInfoList(clientInfoList));
-        })
-        .catch((e) => {
-          message.error('query clientInfo error');
-        });
-    }
+    dispatch(actions.cancelClientInfo());
+    const uri = `/clientInfo/aq`;
+    BaseAPI.POST(uri, {})
+      .then((clientInfoList: TClientInfo[]) => {
+        dispatch(actions.setClientInfoList(clientInfoList));
+      })
+      .catch((e) => {
+        message.error('query clientInfo error');
+      });
   }, []);
 
   const handleChange = (value: string) => {
-    dispatch(actions.setIdClientInfo(value));
+    // dispatch(actions.setIdClientInfo(value));
+    dispatch(fetchTree(value));
   };
 
   const handleSearch = () => {

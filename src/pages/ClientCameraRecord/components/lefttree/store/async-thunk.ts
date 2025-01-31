@@ -7,14 +7,17 @@ import { componentName } from '../conf';
 
 export const fetchTree = createAsyncThunk(
   `${treeConf?.name}/fetchTree`,
-  async (param: void, thunkAPI) => {
+  async (idClientInfo: string | undefined, thunkAPI) => {
     const state: TLeftTreeStore = (thunkAPI.getState() as any)[componentName];
-    const idClientInfo = state.idClientInfo;
     if (!idClientInfo) {
+      idClientInfo = state.idClientInfo;
+    }
+    if (!idClientInfo) {
+      console.error("idClientInfo undefined");
       throw new Error("idClientInfo undefined")
     }
     const tree: any = await BaseAPI.POST(`/clientCamera/aq/${idClientInfo}`, {})
-    return tree;
+    return { idClientInfo, tree };
   },
 );
 

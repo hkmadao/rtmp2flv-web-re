@@ -77,3 +77,12 @@ export const setIdClientInfo: CaseReducer<
   state.idClientInfo = action.payload;
 };
 
+export const cancelIdClientInfo: CaseReducer<
+  TTableStore,
+  PayloadAction<void>
+> = (state, action) => {
+  state.idClientInfo = undefined;
+  state.tableData = [];
+  state.selectedRowKeys = [];
+};
+

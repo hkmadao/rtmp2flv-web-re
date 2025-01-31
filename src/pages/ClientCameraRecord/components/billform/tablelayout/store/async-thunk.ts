@@ -19,6 +19,7 @@ export const fetchByTreeNode = createAsyncThunk(
     const state: TTableStore = (thunkAPI.getState() as any)[componentName];
     const idClientInfo = state.idClientInfo;
     if (!idClientInfo) {
+      console.error("idClientInfo undefined");
       throw new Error("idClientInfo undefined")
     }
     const selectedTreeNode: TTree = message.data as TTree;
@@ -56,6 +57,7 @@ export const search = createAsyncThunk(
     const state: TTableStore = (thunkAPI.getState() as any)[componentName];
     const idClientInfo = state.idClientInfo;
     if (!idClientInfo) {
+      console.error("idClientInfo undefined");
       throw new Error("idClientInfo undefined")
     }
     if (!message || message.consumerIds.includes(componentName)) {
@@ -101,6 +103,7 @@ export const reflesh = createAsyncThunk(
     const state: TTableStore = (thunkAPI.getState() as any)[componentName];
     const idClientInfo = state.idClientInfo;
     if (!idClientInfo) {
+      console.error("idClientInfo undefined");
       throw new Error("idClientInfo undefined")
     }
     const searchData = state.searchData;
@@ -141,6 +144,7 @@ export const pageChange = createAsyncThunk(
     const state: TTableStore = (thunkAPI.getState() as any)[componentName];
     const idClientInfo = state.idClientInfo;
     if (!idClientInfo) {
+      console.error("idClientInfo undefined");
       throw new Error("idClientInfo undefined")
     }
     const fns: TFilterNode[] = [];
@@ -183,6 +187,7 @@ export const batchRemove = createAsyncThunk(
     const state: TTableStore = (thunkAPI.getState() as any)[componentName];
     const idClientInfo = state.idClientInfo;
     if (!idClientInfo) {
+      console.error("idClientInfo undefined");
       throw new Error("idClientInfo undefined")
     }
     const deleteDatas = state.tableData?.filter(d => state.selectedRowKeys?.includes(d.idCameraRecord!));

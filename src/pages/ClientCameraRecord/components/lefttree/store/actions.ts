@@ -104,3 +104,22 @@ export const setClientInfoList: CaseReducer<
   const clientInfoList = action.payload
   state.clientInfoList = clientInfoList;
 };
+
+export const cancelClientInfo: CaseReducer<
+  TLeftTreeStore,
+  PayloadAction<void>
+> = (state, action) => {
+  state.clientInfoList = [];
+  state.idClientInfo = undefined;
+  state.sourchTreeData = [];
+  state.treeData = [];
+  state.foundKeys = [];
+  state.expandedKeys = [];
+  state.selectedKeys = [];
+  state.selectedNode = undefined;
+  subject.publish({
+    topic: 'idClientInfoCancelSelected',
+    producerId: state.idUiConf!,
+    data: undefined,
+  });
+};

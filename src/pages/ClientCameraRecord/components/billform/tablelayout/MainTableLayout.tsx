@@ -47,6 +47,20 @@ const MainTableLayout: FC = () => {
     };
     subject.subscribe(idClientInfoSelectedObserver);
 
+    const idClientInfoCancelSelectedObserver: Observer = {
+      topic: 'idClientInfoCancelSelected',
+      consumerId: idUiConf,
+      update: function (message: TMessage): void {
+        (async () => {
+          if (!message || message.consumerIds.includes(idUiConf)) {
+            return;
+          }
+          dispatch(actions.cancelIdClientInfo());
+        })();
+      },
+    };
+    subject.subscribe(idClientInfoCancelSelectedObserver);
+
     const treeNodeObserver: Observer = {
       topic: 'treeNodeSelected',
       consumerId: idUiConf,
@@ -181,6 +195,7 @@ const MainTableLayout: FC = () => {
 
     //销毁观察者
     return () => {
+      subject.unsubsribe(idClientInfoCancelSelectedObserver);
       subject.unsubsribe(idClientInfoSelectedObserver);
       subject.unsubsribe(treeNodeObserver);
       subject.unsubsribe(treeNodeCancelObserver);
