@@ -9,11 +9,12 @@ import { subject } from "../../../../conf";
 import { deepCopy } from "@/util";
 export const setComponentInfo: CaseReducer<
   TFormStore,
-  PayloadAction<{ idUiConf: string; fgDisabled: boolean; }>
+  PayloadAction<{ idUiConf: string; fgDisabled: boolean; fgHidden: boolean; }>
 > = (state, action) => {
-  const { idUiConf, fgDisabled } = action.payload;
+  const { idUiConf, fgDisabled, fgHidden } = action.payload;
   state.idUiConf = idUiConf;
   state.fgDisabled = fgDisabled;
+  state.fgHidden = fgHidden;
 };
 
 export const setFormData: CaseReducer<
@@ -34,6 +35,8 @@ export const addFormData: CaseReducer<
     action: DOStatus.NEW,
   };
   if (nodeData) {
+    state.formData.idClientInfo = nodeData.idClientInfo;
+    state.formData.clientInfo = deepCopy(nodeData);
   }
   state.newDataArr = [];
   state.editData = undefined;
@@ -43,7 +46,7 @@ export const addFormData: CaseReducer<
   };
 };
 
-export const cancle: CaseReducer<
+export const cancel: CaseReducer<
   TFormStore,
   PayloadAction<void>
 > = (state, action) => {

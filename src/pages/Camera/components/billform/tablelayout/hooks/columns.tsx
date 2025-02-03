@@ -128,6 +128,56 @@ export const useMainTableColumns: () => TableColumnType<TCamera>[] =
             );
           },
         },
+        {
+          width: 150,
+          title: '加密标志',
+          dataIndex: 'fgSecret',
+          key: 'fgSecret',
+          render: (_dom: any, record: any) => {
+            return <><Checkbox checked={record.fgSecret ?? false} /></>;
+          },
+        },
+        {
+          width: 150,
+          title: '密钥',
+          dataIndex: 'secret',
+          key: 'secret',
+          render: (_dom: any, record: any) => {
+            return <>{record.secret ? record.secret : '--'}</>;
+          },
+        },
+        {
+          width: 150,
+          title: '被动推送rtmp标志',
+          dataIndex: 'fgPassive',
+          key: 'fgPassive',
+          render: (_dom: any, record: any) => {
+            return <><Checkbox checked={record.fgPassive ?? false} /></>;
+          },
+        },
+        {
+          width: 150,
+          title: '客户端信息',
+          dataIndex: [
+            'idClientInfo',
+            'clientInfo',
+          ],
+          key: 'idClientInfo',
+          render: (_dom: any, record: any) => {
+            const refConf = getRefByAttr(
+              EPartName.Header,
+              "camera",
+              'idClientInfo',
+              billformConf!,
+            );
+            if (refConf) {
+              const refData = (record as any).clientInfo;
+              if (refData) {
+                return refData[refConf.displayProp!];
+              }
+            }
+          },
+        },
 
     ];
   };

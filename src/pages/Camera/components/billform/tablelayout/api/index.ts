@@ -16,9 +16,6 @@ const ListAPI = {
   enabledChange: (params: TCamera): Promise<TCamera> => {
     return API.POST(`/camera/enabled`, params);
   },
-  rtmpPushChange: (params: TCamera): Promise<TCamera> => {
-    return API.POST(`/camera/rtmpPushChange`, params);
-  },
   saveVideoChange: (params: TCamera): Promise<TCamera> => {
     return API.POST(`/camera/saveVideoChange`, params);
   },

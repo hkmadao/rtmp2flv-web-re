@@ -33,7 +33,7 @@ export const tableSlice = createSlice({
         state.totalCount = pageInfo.pageInfoInput.totalCount;
         state.tableData = pageInfo.dataList;
         state.selectedTreeNode = selectedTreeNode;
-        state.selectedRowKeys = [];
+        state.selectedRowKeys  = [];
         state.searchData = undefined;
         subject.publish({
           topic: 'listReload',
@@ -53,7 +53,7 @@ export const tableSlice = createSlice({
         state.totalCount = pageInfo.pageInfoInput.totalCount;
         state.tableData = pageInfo.dataList;
         // state.selectedTreeNode = selectedTreeNode;
-        state.selectedRowKeys = [];
+        state.selectedRowKeys  = [];
         state.searchData = searchData;
         subject.publish({
           topic: 'listReload',
@@ -73,7 +73,7 @@ export const tableSlice = createSlice({
         state.totalCount = pageInfo.pageInfoInput.totalCount;
         state.tableData = pageInfo.dataList;
         // state.selectedTreeNode = selectedTreeNode;
-        state.selectedRowKeys = [];
+        state.selectedRowKeys  = [];
         // state.searchData = undefined;
         subject.publish({
           topic: 'listReload',
@@ -93,7 +93,7 @@ export const tableSlice = createSlice({
         state.totalCount = pageInfo.pageInfoInput.totalCount;
         state.tableData = pageInfo.dataList;
         // state.selectedTreeNode = selectedTreeNode;
-        state.selectedRowKeys = [];
+        state.selectedRowKeys  = [];
         // state.searchData = undefined;
         subject.publish({
           topic: 'listReload',
@@ -113,7 +113,7 @@ export const tableSlice = createSlice({
         state.totalCount = pageInfo.pageInfoInput.totalCount;
         state.tableData = pageInfo.dataList;
         // state.selectedTreeNode = selectedTreeNode;
-        state.selectedRowKeys = [];
+        state.selectedRowKeys  = [];
         // state.searchData = undefined;
         subject.publish({
           topic: 'listReload',
@@ -170,7 +170,7 @@ export const tableSlice = createSlice({
 
 export const actions = tableSlice.actions;
 
-const reducer: any = {};
+const reducer:any = {};
 reducer[tableSlice.name] = tableSlice.reducer;
 
 export default configureStore({

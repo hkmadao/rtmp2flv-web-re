@@ -81,6 +81,8 @@ export const formSlice = createSlice({
             action: DOStatus.NEW,
           };
           if(state.treeSelectedNode){
+            state.formData.idClientInfo = state.treeSelectedNode.idClientInfo;
+            state.formData.clientInfo = deepCopy(state.treeSelectedNode);
           }
 
           antdMessage.info('新增成功！');

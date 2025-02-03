@@ -28,6 +28,13 @@ const Live: FC<{
   };
 
   const handlePlayClose = () => {
+    if (playRef.current) {
+      playRef.current.pause();
+      playRef.current.unload();
+      playRef.current.detachMediaElement();
+      playRef.current.destroy();
+      playRef.current = undefined;
+    }
     setOpen(false);
   };
 
@@ -37,12 +44,13 @@ const Live: FC<{
 
   const flv_load = () => {
     const liveInfo = getLiveInfo();
-    const serverURL = Env.serverURL;
+    const serverURL = Env.directServerUrl;
     if (!liveInfo) {
       message.error('getLiveInfo error');
       return;
     }
     if (!liveInfo.method || !liveInfo.code || !liveInfo.playAuthCode) {
+      console.error('param error: ', liveInfo);
       return;
     }
     var mediaDataSource: any = {
@@ -100,7 +108,7 @@ const Live: FC<{
         maskClosable={false}
         onCancel={handlePlayClose}
         destroyOnClose={true}
-        width={window.innerWidth*0.8}
+        width={window.innerWidth * 0.9}
         footer={''}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -117,6 +125,7 @@ const Live: FC<{
               className="centeredVideo"
               controls
               width="100%"
+              poster={'./video-background.png'}
             >
               Your browser is too old which doesn't support HTML5 video.
             </video>

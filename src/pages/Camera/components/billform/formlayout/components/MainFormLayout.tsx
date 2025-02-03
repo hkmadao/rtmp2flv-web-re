@@ -17,16 +17,16 @@ import CustomDatePick from '@/components/CustomDatePick';
 import CustomTimePicker from '@/components/CustomTimePicker';
 import {
   TCamera,
-} from '../../../models';
+} from '../../../../models';
 import { getRefByAttr } from '@/util';
-import { billformConf, subject } from '../../../conf';
+import { billformConf, subject } from '../../../../conf';
 import {
   actions,
   toEdit,
   save,
   reflesh,
-} from './store';
-import { useEditStatusInfo, useFormData, useIdUiConf, useFgDisabled, } from './hooks';
+} from '../store';
+import { useEditStatusInfo, useFormData, useIdUiConf, useFgDisabled, } from '../hooks';
 const MainFormLayout: FC = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
@@ -48,13 +48,13 @@ const MainFormLayout: FC = () => {
     }
 
     const cancleObserver: Observer = {
-      topic: 'cancle',
+      topic: 'cancel',
       consumerId: idUiConf,
       update: function (message: TMessage): void {
         if (message.consumerIds.includes(idUiConf)) {
           return;
         }
-        dispatch(actions.cancle());
+        dispatch(actions.cancel());
       },
     };
     subject.subscribe(cancleObserver);
@@ -158,6 +158,11 @@ const MainFormLayout: FC = () => {
 
   const handleValuesChange = (changedValues: any, values: TCamera) => {
     const newValues = { ...values };
+    if (!newValues.clientInfo) {
+      newValues.idClientInfo = undefined;
+    } else {
+      newValues.idClientInfo = newValues.clientInfo.idClientInfo;
+    }
     dispatch(actions.updateFormData(newValues));
   }
 
@@ -171,7 +176,7 @@ const MainFormLayout: FC = () => {
             style={{ padding: '5px 0px 5px 0px' }}
           >
             <Input
-              readOnly={fgDisabled || true }
+              readOnly={fgDisabled }
               allowClear
               placeholder={
                 '请输入摄像头主属性'
@@ -223,7 +228,7 @@ const MainFormLayout: FC = () => {
             style={{ padding: '5px 0px 5px 0px' }}
             valuePropName="checked"
           >
-            <Checkbox disabled={fgDisabled || true }/>
+            <Checkbox disabled={fgDisabled }/>
           </Form.Item>
           <Form.Item
             label={'启用状态'}
@@ -231,7 +236,7 @@ const MainFormLayout: FC = () => {
             style={{ padding: '5px 0px 5px 0px' }}
             valuePropName="checked"
           >
-            <Checkbox disabled={fgDisabled || true }/>
+            <Checkbox disabled={fgDisabled }/>
           </Form.Item>
           <Form.Item
             label={'保存录像状态'}
@@ -239,7 +244,7 @@ const MainFormLayout: FC = () => {
             style={{ padding: '5px 0px 5px 0px' }}
             valuePropName="checked"
           >
-            <Checkbox disabled={fgDisabled || true }/>
+            <Checkbox disabled={fgDisabled }/>
           </Form.Item>
           <Form.Item
             label={'直播状态'}
@@ -247,7 +252,7 @@ const MainFormLayout: FC = () => {
             style={{ padding: '5px 0px 5px 0px' }}
             valuePropName="checked"
           >
-            <Checkbox disabled={fgDisabled || true }/>
+            <Checkbox disabled={fgDisabled }/>
           </Form.Item>
           <Form.Item
             label={'创建时间'}
@@ -257,6 +262,49 @@ const MainFormLayout: FC = () => {
             <CustomDatePick 
               format='YYYY-MM-DDTHH:mm:ssZ'
               displayFormat='YYYY-MM-DD HH:mm:ss'
+            />
+          </Form.Item>
+          <Form.Item
+            label={'加密标志'}
+            name={'fgSecret'}
+            style={{ padding: '5px 0px 5px 0px' }}
+            valuePropName="checked"
+          >
+            <Checkbox disabled={fgDisabled }/>
+          </Form.Item>
+          <Form.Item
+            label={'密钥'}
+            name={'secret'}
+            style={{ padding: '5px 0px 5px 0px' }}
+          >
+            <Input
+              readOnly={fgDisabled }
+              allowClear
+              placeholder={
+                '请输入密钥'
+              }
+            />
+          </Form.Item>
+          <Form.Item
+            label={'被动推送rtmp标志'}
+            name={'fgPassive'}
+            style={{ padding: '5px 0px 5px 0px' }}
+            valuePropName="checked"
+          >
+            <Checkbox disabled={fgDisabled }/>
+          </Form.Item>
+          <Form.Item
+            label={'客户端信息'}
+            name={'clientInfo'}
+            style={{ padding: '5px 0px 5px 0px' }}
+          >
+            <RefPicker
+              {...getRefByAttr(
+                EPartName.Header,
+                'camera',
+                'idClientInfo',
+                billformConf!,
+              )!}
             />
           </Form.Item>
         </Space>

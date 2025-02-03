@@ -1,41 +1,44 @@
-import { FC, Key, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Button, Modal } from 'antd';
+import { useSelector, useDispatch } from 'react-redux';
 import { Observer, TMessage } from '@/util/observer';
-import { subject, actionTableConf } from '../../conf';
+import { subject, actionTableConf } from '../../../../conf';
+import {
+  useFgDisabled,
+  useIdUiConf,
+  useRowSelectionType,
+  useSelectRows,
+  useTreeNodeData,
+} from '../hooks';
 import { TTree } from '@/models';
-import Live, { TLiveInfo } from '../../../../components/Live';
-import { TCamera } from '../../models';
+import { actions } from '../store';
+import Live, { TLiveInfo } from '../../../../../../components/Live';
+import { TCamera } from '../../../../models';
 
-const TableToolBar: FC<{
-  idLayout: string;
-  /**组件是否是禁用状态 */
-  fgDisabled: boolean;
-}> = ({ idLayout, fgDisabled }) => {
-  const [componentFgDiabled, setComponentFgDiabled] =
-    useState<boolean>(fgDisabled);
+const SearchAreaComponent: FC<{}> = ({}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [multiButtonContent, setMultiButtonContent] = useState<string>('多选');
-  const [nodeTreeData, setTreeNodeData] = useState<TTree>();
-  const [selectRows, setSelectRows] = useState<any[]>([]);
-  const [rowSelectionType, setRowSelectionType] = useState<
-    'checkbox' | 'radio'
-  >('radio');
+  const idUiConf = useIdUiConf();
+  const fgDisabled = useFgDisabled();
+  const nodeTreeData = useTreeNodeData();
+  const selectRows = useSelectRows();
+  const rowSelectionType = useRowSelectionType();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setComponentFgDiabled(fgDisabled);
-  }, [fgDisabled]);
+    if (!idUiConf) {
+      return;
+    }
 
-  useEffect(() => {
     const treeNodeObserver: Observer = {
       topic: 'treeNodeSelected',
-      consumerId: idLayout,
+      consumerId: idUiConf!,
       update: function (message: TMessage): void {
         (async () => {
           if (!message) {
             return;
           }
           const nodeData: TTree = message?.data as TTree;
-          setTreeNodeData(nodeData);
+          dispatch(actions.setTreeNodeData(nodeData));
         })();
       },
     };
@@ -43,13 +46,13 @@ const TableToolBar: FC<{
 
     const treeNodeCancelObserver: Observer = {
       topic: 'treeSelectCancel',
-      consumerId: idLayout,
+      consumerId: idUiConf!,
       update: function (message: TMessage): void {
         (async () => {
-          if (!message || message.consumerIds.includes(idLayout)) {
+          if (!message || message.consumerIds.includes(idUiConf!)) {
             return;
           }
-          setTreeNodeData(undefined);
+          dispatch(actions.cancelTreeNodeData());
         })();
       },
     };
@@ -57,23 +60,24 @@ const TableToolBar: FC<{
 
     const selectRowsObserver: Observer = {
       topic: 'selectRows',
-      consumerId: idLayout,
+      consumerId: idUiConf!,
       update: function (message: TMessage): void {
-        if (message.consumerIds.includes(idLayout)) {
+        if (message.consumerIds.includes(idUiConf!)) {
           return;
         }
-        setSelectRows(message.data);
+        dispatch(actions.setSelectRows(message.data));
       },
     };
     subject.subscribe(selectRowsObserver);
 
     const listReloadObserver: Observer = {
       topic: 'listReload',
-      consumerId: idLayout,
+      consumerId: idUiConf!,
       update: function (message: TMessage): void {
-        if (message.consumerIds.includes(idLayout)) {
+        if (message.consumerIds.includes(idUiConf!)) {
           return;
         }
+        dispatch(actions.setSelectRows([]));
       },
     };
     subject.subscribe(listReloadObserver);
@@ -85,17 +89,17 @@ const TableToolBar: FC<{
       subject.unsubsribe(selectRowsObserver);
       subject.unsubsribe(listReloadObserver);
     };
-  }, []);
+  }, [idUiConf]);
 
   const handleToAdd = () => {
     subject.publish({
       topic: 'toAdd',
-      producerId: idLayout,
-      data: { treeSelectedNode: nodeTreeData },
+      producerId: idUiConf!,
+      data: { treeSelectedNode: nodeTreeData! },
     });
     subject.publish({
       topic: '/page/change',
-      producerId: idLayout,
+      producerId: idUiConf!,
       data: 'form',
     });
   };
@@ -103,12 +107,12 @@ const TableToolBar: FC<{
   const handleToEdit = () => {
     subject.publish({
       topic: 'toEdit',
-      producerId: idLayout,
+      producerId: idUiConf!,
       data: { treeSelectedNode: nodeTreeData, selectedRow: selectRows[0] },
     });
     subject.publish({
       topic: '/page/change',
-      producerId: idLayout,
+      producerId: idUiConf!,
       data: 'form',
     });
   };
@@ -119,30 +123,26 @@ const TableToolBar: FC<{
 
   const handleRowSelectType = () => {
     if (rowSelectionType !== 'checkbox') {
-      setMultiButtonContent('取消多选');
       subject.publish({
         topic: 'checkbox',
-        producerId: idLayout,
+        producerId: idUiConf!,
         data: undefined,
       });
-      setRowSelectionType('checkbox');
-      setSelectRows([]);
+      dispatch(actions.setRowSelectionType('checkbox'));
       return;
     }
     subject.publish({
       topic: 'radio',
-      producerId: idLayout,
+      producerId: idUiConf!,
       data: undefined,
     });
-    setRowSelectionType('radio');
-    setMultiButtonContent('多选');
-    setSelectRows([]);
+    dispatch(actions.setRowSelectionType('radio'));
   };
 
   const handleOk = () => {
     subject.publish({
       topic: 'deletes',
-      producerId: idLayout,
+      producerId: idUiConf!,
       data: undefined,
     });
     setIsModalVisible(false);
@@ -155,35 +155,35 @@ const TableToolBar: FC<{
   const handleReflesh = () => {
     subject.publish({
       topic: 'reflesh',
-      producerId: idLayout,
+      producerId: idUiConf!,
       data: undefined,
     });
   };
   const handleEnableChange = () => {
     subject.publish({
       topic: 'enabledChange',
-      producerId: idLayout,
+      producerId: idUiConf!,
       data: undefined,
     });
   };
   const handleLiveChange = () => {
     subject.publish({
       topic: 'liveChange',
-      producerId: idLayout,
+      producerId: idUiConf!,
       data: undefined,
     });
   };
   const handleSaveVideoChange = () => {
     subject.publish({
       topic: 'saveVideoChange',
-      producerId: idLayout,
+      producerId: idUiConf!,
       data: undefined,
     });
   };
   const handlePlayAuthreFresh = () => {
     subject.publish({
       topic: 'playAuthCodeReset',
-      producerId: idLayout,
+      producerId: idUiConf!,
       data: undefined,
     });
   };
@@ -215,10 +215,17 @@ const TableToolBar: FC<{
           flexWrap: 'wrap',
         }}
       >
-        <Button size={'middle'} type={'primary'} onClick={handleToAdd}>
+        <Button
+          key={'VxszMmoLcT-BbG5uOlvlB'}
+          size={'middle'}
+          type={'primary'}
+          disabled={!nodeTreeData}
+          onClick={handleToAdd}
+        >
           {'新增'}
         </Button>
         <Button
+          key={'75umlzBtNeO1we1f4fGiL'}
           size={'middle'}
           type={'primary'}
           disabled={selectRows?.length !== 1}
@@ -227,22 +234,27 @@ const TableToolBar: FC<{
           {'编辑'}
         </Button>
         <Button
+          key={'q4WpAggIqtpyzx7K6ViA8'}
           size={'middle'}
           type={'primary'}
+          disabled={!nodeTreeData}
           hidden={rowSelectionType === 'radio'}
           onClick={handleRowSelectType}
         >
           {'单选'}
         </Button>
         <Button
+          key={'OC0vViwCYiaEERQTq179i'}
           size={'middle'}
           type={'primary'}
+          disabled={!nodeTreeData}
           hidden={rowSelectionType === 'checkbox'}
           onClick={handleRowSelectType}
         >
           {'多选'}
         </Button>
         <Button
+          key={'r2_WZBzZpSEXzGRElvfSY'}
           size={'middle'}
           type={'primary'}
           disabled={selectRows?.length == 0}
@@ -251,36 +263,40 @@ const TableToolBar: FC<{
           {'删除'}
         </Button>
         <Button
+          key={'JNeTkXaIKMPFlmvlU6AAu'}
           size={'middle'}
           type={'primary'}
           disabled={selectRows?.length !== 1}
           onClick={handleEnableChange}
         >
-          {selectRows?.length === 1 && !selectRows[0]['enabled']
+          {selectRows?.length === 1 && selectRows[0]['enabled'] === false
             ? '启用'
             : '禁用'}
         </Button>
         <Button
+          key={'V7R6RR65lw72LQR3FdVHA'}
           size={'middle'}
           type={'primary'}
           disabled={selectRows?.length !== 1}
           onClick={handleLiveChange}
         >
-          {selectRows?.length === 1 && !selectRows[0]['live']
+          {selectRows?.length === 1 && selectRows[0]['rtmpPushStatus'] === false
             ? '开启直播'
             : '停止直播'}
         </Button>
         <Button
+          key={'XkClpAiIv6vvrpAY9aSw9'}
           size={'middle'}
           type={'primary'}
           disabled={selectRows?.length !== 1}
           onClick={handleSaveVideoChange}
         >
-          {selectRows?.length === 1 && !selectRows[0]['saveVideo']
+          {selectRows?.length === 1 && selectRows[0]['saveVideo'] === false
             ? '开启录像'
             : '停止录像'}
         </Button>
         <Button
+          key={'2syLV9rH2NWsQ0KzdcpqI'}
           size={'middle'}
           type={'primary'}
           disabled={selectRows?.length !== 1}
@@ -302,4 +318,4 @@ const TableToolBar: FC<{
   );
 };
 
-export default TableToolBar;
+export default SearchAreaComponent;

@@ -10,8 +10,9 @@ import { getAsso, getLayoutById } from '@/util';
 import { subject } from '../conf';
 import TableLayout from './billform/tablelayout';
 import FormLayout from './billform/formlayout';
-import TableToolBar from './toolbar/TableToolBar';
-import FormToolBar from './toolbar/FormToolBar';
+import LeftTree from './lefttree';
+import TableToolBar from './toolbar/tabletoolbar';
+import FormToolBar from './toolbar/formtoolbar';
 import SearchArea from './searcharea';
 
 const Center: FC = () => {
@@ -52,19 +53,22 @@ const Center: FC = () => {
       const param = { ...layout, layoutChildren: layout.children };
       if (layout.type === 'component') {
         if (layout.component?.componentType === 'viewBillform') {
-          return <Layout {...param}><TableLayout idLayout={layout.id} fgDisabled={asso.disabled} /></Layout>;
+          return <Layout {...param}><TableLayout idLayout={layout.id} fgDisabled={asso.disabled} fgHidden={asso.hidden} /></Layout>;
         }
         if (layout.component?.componentType === 'editBillform') {
-          return <Layout {...param}><FormLayout idLayout={layout.id} fgDisabled={asso.disabled} /></Layout>;
+          return <Layout {...param}><FormLayout idLayout={layout.id} fgDisabled={asso.disabled} fgHidden={asso.hidden} /></Layout>;
+        }
+        if (layout.component?.componentType === 'tree') {
+          return <Layout {...param}><LeftTree idLayout={layout.id} fgDisabled={asso.disabled} fgHidden={asso.hidden} /></Layout>;
         }
         if (layout.component?.componentType === 'viewButton') {
-          return <Layout {...param}><TableToolBar idLayout={layout.id} fgDisabled={asso.disabled} /></Layout>;
+          return <Layout {...param}><TableToolBar idLayout={layout.id} fgDisabled={asso.disabled} fgHidden={asso.hidden} /></Layout>;
         }
         if (layout.component?.componentType === 'editButton') {
-          return <Layout {...param}><FormToolBar idLayout={layout.id} fgDisabled={asso.disabled} /></Layout>;
+          return <Layout {...param}><FormToolBar idLayout={layout.id} fgDisabled={asso.disabled} fgHidden={asso.hidden} /></Layout>;
         }
         if (layout.component?.componentType === 'search') {
-          return <Layout {...param}><SearchArea idLayout={layout.id} fgDisabled={asso.disabled} /></Layout>;
+          return <Layout {...param}><SearchArea idLayout={layout.id} fgDisabled={asso.disabled} fgHidden={asso.hidden} /></Layout>;
         }
         return <Layout {...param}>自定义组件</Layout>;
       }

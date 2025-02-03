@@ -5,10 +5,12 @@ import moment from 'moment';
 import styles from './styles.less';
 import { 
   useSelectRow,
-} from './hooks';
+} from '../hooks';
 import {
+  TClientInfo,
   TCameraShare,
-} from '../../../models';
+  TCameraRecord,
+} from '../../../../models';
 
 const SubTableLayout: FC = () => {
   const selectRow = useSelectRow();

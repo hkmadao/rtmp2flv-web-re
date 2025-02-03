@@ -33,6 +33,16 @@ const Live: FC = () => {
     setAudio(e.target.checked);
   };
 
+  const handleStop = () => {
+    if (playRef.current) {
+      playRef.current.pause();
+      playRef.current.unload();
+      playRef.current.detachMediaElement();
+      playRef.current.destroy();
+      playRef.current = undefined;
+    }
+  }
+
   const flv_load = () => {
     let method = getQueryString('method');
     let code = getQueryString('code');
@@ -48,7 +58,7 @@ const Live: FC = () => {
       code: code,
       playAuthCode: authCode,
     };
-    const serverURL = Env.serverURL;
+    const serverURL = Env.directServerUrl;
     if (!liveInfo) {
       message.error('getLiveInfo error');
       return;
@@ -111,6 +121,9 @@ const Live: FC = () => {
             <Button type="primary" onClick={handlePlay}>
               Play
             </Button>
+            <Button type="primary" onClick={handleStop}>
+              Stop
+            </Button>
             <Checkbox checked={audio} onChange={handleAudioChange}>
               hasAudio
             </Checkbox>
@@ -120,6 +133,7 @@ const Live: FC = () => {
               className="centeredVideo"
               controls
               width="90%"
+              poster={'./video-background.png'}
             >
               Your browser is too old which doesn't support HTML5 video.
             </video>

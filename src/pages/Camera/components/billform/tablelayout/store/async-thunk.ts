@@ -7,7 +7,7 @@ import { queryConf, tableConf, } from '../../../../conf';
 import ListAPI from '../api';
 import {
   TCamera,
-} from '../../../../models';
+ } from '../../../../models';
 const searcheRefs = queryConf?.searchRefs;
 
 export const fetchByTreeNode = createAsyncThunk(
@@ -18,6 +18,10 @@ export const fetchByTreeNode = createAsyncThunk(
     }
     const selectedTreeNode: TTree = message.data as TTree;
     const fns: TFilterNode[] = [];
+    if (selectedTreeNode) {
+      const treeIdFn: TFilterNode = equalFilterNode('idClientInfo', stringFilterParam(selectedTreeNode['idClientInfo']));
+      fns.push(treeIdFn);
+    }
     const params: TPageInfoInput = {
       pageIndex: 1,
       pageSize: 10,
@@ -38,10 +42,10 @@ export const fetchByTreeNode = createAsyncThunk(
     const pageInfo: TPageInfo<TCamera> = await ListAPI.pageList(
       params,
     );
-    return {
-      selectedTreeNode,
-      pageInfo,
-    }
+return {
+  selectedTreeNode,
+  pageInfo,
+}
   },
 );
 
@@ -54,6 +58,10 @@ export const search = createAsyncThunk(
     }
     const searchData = message.data;
     const fns: TFilterNode[] = [];
+    if (state.selectedTreeNode) {
+      const treeIdFn: TFilterNode = equalFilterNode('idClientInfo', stringFilterParam(state.selectedTreeNode['idClientInfo']));
+      fns.push(treeIdFn);
+    }
     const searchFilter = buildFiltersBySearchRef(searchData, searcheRefs);
     if (!searchFilter) {
       return;
@@ -79,10 +87,10 @@ export const search = createAsyncThunk(
     const pageInfo: TPageInfo<TCamera> = await ListAPI.pageList(
       params,
     );
-    return {
-      searchData,
-      pageInfo,
-    }
+return {
+  searchData,
+  pageInfo,
+}
   },
 );
 
@@ -92,6 +100,10 @@ export const reflesh = createAsyncThunk(
     const state: TTableStore = (thunkAPI.getState() as any)[componentName];
     const searchData = state.searchData;
     const fns: TFilterNode[] = [];
+    if (state.selectedTreeNode) {
+      const treeIdFn: TFilterNode = equalFilterNode('idClientInfo', stringFilterParam(state.selectedTreeNode['idClientInfo']));
+      fns.push(treeIdFn);
+    }
     const searchFilter = buildFiltersBySearchRef(searchData, searcheRefs);
     if (!searchFilter) {
       return;
@@ -117,7 +129,7 @@ export const reflesh = createAsyncThunk(
     const pageInfo: TPageInfo<TCamera> = await ListAPI.pageList(
       searchParam,
     );
-    return pageInfo
+return pageInfo
   },
 );
 
@@ -127,6 +139,10 @@ export const pageChange = createAsyncThunk(
     const { page, pageSize } = params;
     const state: TTableStore = (thunkAPI.getState() as any)[componentName];
     const fns: TFilterNode[] = [];
+    if (state.selectedTreeNode) {
+      const treeIdFn: TFilterNode = equalFilterNode('idClientInfo', stringFilterParam(state.selectedTreeNode['idClientInfo']));
+      fns.push(treeIdFn);
+    }
     const searchData = state.searchData;
     const searchFilter = buildFiltersBySearchRef(searchData, searcheRefs);
     if (!searchFilter) {
@@ -153,7 +169,7 @@ export const pageChange = createAsyncThunk(
     const pageInfo: TPageInfo<TCamera> = await ListAPI.pageList(
       queyrParams,
     );
-    return pageInfo
+return pageInfo
   },
 );
 
@@ -170,6 +186,16 @@ export const batchRemove = createAsyncThunk(
     }
     await ListAPI.batchRemove(deleteDatas);
     const fns: TFilterNode[] = [];
+    if (state.selectedTreeNode) {
+      const treeIdFn: TFilterNode = equalFilterNode('cameraId', stringFilterParam(state.selectedTreeNode['id']));
+      fns.push(treeIdFn);
+    }
+    const searchData = state.searchData;
+    const searchFilter = buildFiltersBySearchRef(searchData, searcheRefs);
+    if (!searchFilter) {
+      return;
+    }
+    fns.push(...searchFilter.andFilters);
     const params: TPageInfoInput = {
       pageIndex: 1,
       pageSize: 10,
@@ -180,13 +206,8 @@ export const batchRemove = createAsyncThunk(
           direction: EDirection.DESC,
           ignoreCase: false,
         },
-        {
-          property: 'id',
-          direction: EDirection.ASC,
-          ignoreCase: false,
-        },
-      ],
-    };
+  ],
+};
     const pageInfo: TPageInfo<TCamera> = await ListAPI.pageList(
       params,
     );
