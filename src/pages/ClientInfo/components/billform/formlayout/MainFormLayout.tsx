@@ -48,13 +48,13 @@ const MainFormLayout: FC = () => {
     }
 
     const cancleObserver: Observer = {
-      topic: 'cancle',
+      topic: 'cancel',
       consumerId: idUiConf,
       update: function (message: TMessage): void {
         if (message.consumerIds.includes(idUiConf)) {
           return;
         }
-        dispatch(actions.cancle());
+        dispatch(actions.cancel());
       },
     };
     subject.subscribe(cancleObserver);

@@ -45,7 +45,7 @@ export const addFormData: CaseReducer<
   };
 };
 
-export const cancle: CaseReducer<
+export const cancel: CaseReducer<
   TFormStore,
   PayloadAction<void>
 > = (state, action) => {

@@ -73,7 +73,7 @@ const FormToolBar: FC<{
 
   const handleCancel = () => {
     subject.publish({
-      topic: 'cancle',
+      topic: 'cancel',
       producerId: idLayout,
       data: undefined,
     });
