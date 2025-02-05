@@ -131,19 +131,10 @@ export const useMainTableColumns: () => TableColumnType<TCamera>[] =
         {
           width: 150,
           title: '加密标志',
-          dataIndex: 'fgSecret',
-          key: 'fgSecret',
+          dataIndex: 'fgEncrypt',
+          key: 'fgEncrypt',
           render: (_dom: any, record: any) => {
-            return <><Checkbox checked={record.fgSecret ?? false} /></>;
-          },
-        },
-        {
-          width: 150,
-          title: '密钥',
-          dataIndex: 'secret',
-          key: 'secret',
-          render: (_dom: any, record: any) => {
-            return <>{record.secret ? record.secret : '--'}</>;
+            return <><Checkbox checked={record.fgEncrypt ?? false} /></>;
           },
         },
         {

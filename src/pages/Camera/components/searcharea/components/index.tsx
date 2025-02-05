@@ -59,8 +59,8 @@ const SearchAreaComponent: FC<{}> = ({ }) => {
     const newValues:any = {};
     newValues.onlineStatus = 'all';
     newValues.enabled = 'all';
-    newValues.fgSecret = 'all';
     newValues.fgPassive = 'all';
+    newValues.fgEncrypt = 'all';
     form.setFieldsValue(newValues);
     searchValuesRef.current = newValues;
   }, [searcheRefs]);
@@ -148,8 +148,8 @@ const SearchAreaComponent: FC<{}> = ({ }) => {
             </Select>
           </Form.Item>
           <Form.Item
-            label={'加密标志'}
-            name={'fgSecret'}
+            label={'被动推送rtmp标志'}
+            name={'fgPassive'}
             style={{ padding: '5px 0px 5px 0px' }}
           >
             <Select placeholder={'请选择'} >
@@ -159,8 +159,8 @@ const SearchAreaComponent: FC<{}> = ({ }) => {
             </Select>
           </Form.Item>
           <Form.Item
-            label={'被动推送rtmp标志'}
-            name={'fgPassive'}
+            label={'加密标志'}
+            name={'fgEncrypt'}
             style={{ padding: '5px 0px 5px 0px' }}
           >
             <Select placeholder={'请选择'} >

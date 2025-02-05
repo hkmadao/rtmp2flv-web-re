@@ -266,24 +266,11 @@ const MainFormLayout: FC = () => {
           </Form.Item>
           <Form.Item
             label={'加密标志'}
-            name={'fgSecret'}
+            name={'fgEncrypt'}
             style={{ padding: '5px 0px 5px 0px' }}
             valuePropName="checked"
           >
             <Checkbox disabled={fgDisabled }/>
-          </Form.Item>
-          <Form.Item
-            label={'密钥'}
-            name={'secret'}
-            style={{ padding: '5px 0px 5px 0px' }}
-          >
-            <Input
-              readOnly={fgDisabled }
-              allowClear
-              placeholder={
-                '请输入密钥'
-              }
-            />
           </Form.Item>
           <Form.Item
             label={'被动推送rtmp标志'}
