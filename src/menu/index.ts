@@ -28,12 +28,22 @@ const menus: MenuDataItem[] = [
         "name": "摄像头分享"
       },
       {
-        "path": "/live/ClientCameraRecord",
-        "name": "客户端摄像头记录",
+        "path": "/live/CameraRecord",
+        "name": "录像记录",
       },
       {
-        "path": "/live/ClientInfo",
+        "path": "/client/ClientInfo",
         "name": "客户端信息",
+      },
+    ]
+  },
+  {
+    path: '/client',
+    name: '客户端文件',
+    children: [
+      {
+        "path": "/client/ClientCameraRecord",
+        "name": "客户端录像记录",
       },
     ]
   },

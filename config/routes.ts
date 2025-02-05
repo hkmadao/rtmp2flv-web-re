@@ -36,15 +36,21 @@ export default [
         "exact": true
       },
       {
-        "path": "live/ClientCameraRecord",
-        "name": "客户端摄像头记录",
-        "component": "@/pages/ClientCameraRecord",
+        "path": "live/CameraRecord",
+        "name": "录像记录",
+        "component": "@/pages/CameraRecord",
         "exact": true
       },
       {
-        "path": "live/ClientInfo",
+        "path": "client/ClientInfo",
         "name": "客户端信息",
         "component": "@/pages/ClientInfo",
+        "exact": true
+      },
+      {
+        "path": "client/ClientCameraRecord",
+        "name": "客户端录像记录",
+        "component": "@/pages/ClientCameraRecord",
         "exact": true
       },
       {
