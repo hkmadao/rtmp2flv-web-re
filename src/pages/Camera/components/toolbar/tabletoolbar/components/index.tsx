@@ -12,8 +12,9 @@ import {
 } from '../hooks';
 import { TTree } from '@/models';
 import { actions } from '../store';
-import Live, { TLiveInfo } from '../../../../../../components/Live';
 import { TCamera } from '../../../../models';
+import Live from '../../../../../../components/Live';
+import { TLiveInfo } from '@/components/LiveCore';
 
 const SearchAreaComponent: FC<{}> = ({}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
